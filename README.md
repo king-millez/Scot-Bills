@@ -12,19 +12,13 @@ To quote Ben:
 
 And so it was done.
 
----
-
 ## Usage
-
----
 
 ### Setup
 
 Use **pip3** to install the required modules in `requirements.txt`:
 
 ```pip3 install -r requirements.txt```
-
----
 
 ### Returning all bills
 
@@ -42,8 +36,6 @@ print(all_bills[0])
 # Print the first bill's URL:
 print(all_bills[0]['url'])
 ```
-
----
 
 ## Todo
 
