@@ -12,6 +12,7 @@ TITLE = 'title'
 URL = 'url'
 BILL_TYPE = 'bill_type'
 STATUS = 'status'
+SESSION = 'session'
 
 class All_Bills(object):
     _bills_data = []
@@ -40,7 +41,7 @@ class All_Bills(object):
                 _bill_url = beta_strip + row.find('a')['href']
                 _bill_type = row.find('p').text
                 _bill_status = self.get_status(row.find('text', {'class': 'box__text'}).text)
-                bill_dict = {URL: _bill_url, TITLE: _bill_title, BILL_TYPE: _bill_type, STATUS: _bill_status}
+                bill_dict = {URL: _bill_url, TITLE: _bill_title, SESSION: 5, BILL_TYPE: _bill_type, STATUS: _bill_status}
                 self._bills_data.append(bill_dict)
     
     def get_status(self, _input):
@@ -64,13 +65,14 @@ class All_Bills(object):
         soup = BeautifulSoup(get(old_site_base, headers=headers).text, 'lxml')
         div = soup.find('div', {'class': 'secondaryContent'})
         for session in div.find_all('div', {'class': 'podHalf'})[1:]:
+            session_num = int(session.text[10:][0])
             soup = BeautifulSoup(get(old_base + session.find('a')['href'], headers=headers).text, 'lxml')
             row = soup.find('div', {'class': 'secondaryContent'})
             table = row.find_all('div', {'class': 'podHalf'})
             for row in table:
                 _bill_title = row.text.strip()
                 _bill_url = old_base + row.find('a')['href']
-                bill_dict = {URL: _bill_url, TITLE: _bill_title}
+                bill_dict = {URL: _bill_url, TITLE: _bill_title, SESSION: session_num}
                 self._bills_data.append(bill_dict)
 
     @property
@@ -78,3 +80,4 @@ class All_Bills(object):
         return(self._bills_data)
 
 all_bills = All_Bills().data
+open('ScotParl.json', 'w').write(json.dumps(all_bills, indent=2))
